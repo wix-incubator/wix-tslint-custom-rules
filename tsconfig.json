@@ -1,0 +1,8 @@
+{
+  "exclude": [
+    "../wix-tslint-custom-rules2/node_modules"
+  ],
+  "include": [
+    "src"
+  ]
+}
