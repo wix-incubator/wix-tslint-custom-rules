@@ -1,6 +1,16 @@
 {
-  "exclude": [
-    "../wix-tslint-custom-rules2/node_modules"
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "sourceMap": true,
+    "outDir": "dist/src",
+    "skipLibCheck": true,
+    "lib": [
+      "es6"
+    ]
+  },
+    "exclude": [
+    "node_modules"
   ],
   "include": [
     "src"

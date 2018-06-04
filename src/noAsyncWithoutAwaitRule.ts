@@ -46,7 +46,7 @@ class Walk extends Lint.RuleWalker {
         return awaitInChildren.some(Boolean);
     }
 
-    addFailureIfAsyncFunctionHasNoAwait(node: ts.ArrowFunction | ts.FunctionDeclaration) {
+    addFailureIfAsyncFunctionHasNoAwait(node: ts.ArrowFunction | ts.FunctionDeclaration | ts.MethodDeclaration) {
         if (Walk.isAsyncFunction(node) && !Walk.functionBlockHasAwait(node.body)) {
             this.addFailureAtNode(node, Rule.FAILURE_STRING);
         }
