@@ -4,54 +4,46 @@ import {isArrowFunction, isFunctionDeclaration} from 'tsutils';
 
 export class Rule extends Lint.Rules.AbstractRule {
     public apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
-        return this.applyWithFunction(sourceFile, walk);
+        return this.applyWithWalker(new Walk(sourceFile, this.getOptions()));
     }
 }
 
-const walk = (ctx: Lint.WalkContext<any>): void => {
-    const isAsyncFunction = (node): boolean => {
+class Walk extends Lint.RuleWalker {
+    visitFunctionDeclaration(node: ts.FunctionDeclaration) {
+        this.addFailureIfAsyncFunctionHasNoAwait(node);
+        super.visitFunctionDeclaration(node);
+    }
+
+    visitArrowFunction(node: ts.ArrowFunction) {
+        this.addFailureIfAsyncFunctionHasNoAwait(node);
+        super.visitArrowFunction(node);
+    }
+
+    static isAsyncFunction(node): boolean {
         return Boolean(node.modifiers && node.modifiers.find(modifier => modifier.kind === ts.SyntaxKind.AsyncKeyword));
     };
 
-    const hasAwait = (node: ts.Node): boolean => {
+    static isAwait(node: ts.Node): boolean {
         return node.kind === ts.SyntaxKind.AwaitKeyword;
-    };
+    }
 
-    const recursivelyHasAwait = (node: ts.Node) => {
-        if (hasAwait(node)) {
+    static functionBlockHasAwait(node: ts.Node) {
+        if (Walk.isAwait(node)) {
             return true;
         }
-        const awaitInChildren = node.getChildren().map(recursivelyHasAwait);
+
         if (node.kind === ts.SyntaxKind.ArrowFunction || node.kind === ts.SyntaxKind.FunctionDeclaration) {
             return false;
         }
+
+        const awaitInChildren = node.getChildren().map(Walk.functionBlockHasAwait);
         return awaitInChildren.some(Boolean);
-    };
+    }
 
-    const getAllFunctions = (rootNode: ts.Node) => {
-        let funcs = [];
-        const isFunction = child => isFunctionDeclaration(child) || isArrowFunction(child);
-
-        const getFunctions = (node) => {
-            if (isFunction(node)) {
-                funcs.push(node);
-            }
-            node.getChildren().map(getFunctions);
-        };
-
-        getFunctions(rootNode);
-        return funcs;
-    };
-
-    const {sourceFile} = ctx;
-    const checkIfFunctionIsAsyncButHasNoAwait = (node: ts.Node) => {
-        if ((isFunctionDeclaration(node) || isArrowFunction(node)) && isAsyncFunction(node)) {
-            const block = node.getChildren().find(child => child.kind === ts.SyntaxKind.Block);
-            if (!recursivelyHasAwait(block)) {
-                ctx.addFailureAtNode(node, 'Async function without await is not allowed');
-            }
+    addFailureIfAsyncFunctionHasNoAwait(node: ts.ArrowFunction | ts.FunctionDeclaration) {
+        if (Walk.isAsyncFunction(node) && !Walk.functionBlockHasAwait(node.getChildren().find(child => child.kind === ts.SyntaxKind.Block))) {
+            this.addFailureAt(node.getStart(), node.getWidth(), 'Async function without await is not allowed');
         }
-    };
 
-    getAllFunctions(sourceFile).forEach(checkIfFunctionIsAsyncButHasNoAwait);
-};
+    }
+}
