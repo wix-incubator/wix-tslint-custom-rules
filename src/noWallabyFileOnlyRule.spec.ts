@@ -1,22 +1,6 @@
 import {Configuration, Linter, Replacement} from 'tslint';
-
+import {getFixedResult, helper} from './lintRunner';
 const rule = 'no-wallaby-file-only';
-
-const helper = ({src, rule}) => {
-    const linter = new Linter({fix: false});
-    linter.lint('', src, Configuration.parseConfigFile({
-        "rules": {
-            [rule]: true
-        },
-        "rulesDirectory": "src"
-    }));
-    return linter.getResult();
-};
-
-const getFixedResult = ({src, rule}) => {
-    const result = helper({src, rule});
-    return Replacement.applyFixes(src, [result.failures[0].getFix()]);
-};
 
 describe('no-wallaby-file-only rule', () => {
     it('Should not allow the //file.only comment', () => {
@@ -24,7 +8,7 @@ describe('no-wallaby-file-only rule', () => {
             //file.only
             var x = 1;
         `;
-        const result = helper({src, rule: 'no-wallaby-file-only'});
+        const result = helper({src, rule});
         expect(result.errorCount).toBe(1);
         expect(result.failures[0].getFailure()).toBe('file.only comments are not allowed');
     });
@@ -34,7 +18,7 @@ describe('no-wallaby-file-only rule', () => {
             // file.only
             var x = 1;
         `;
-        const result = helper({src, rule: 'no-wallaby-file-only'});
+        const result = helper({src, rule});
         expect(result.errorCount).toBe(1);
         expect(result.failures[0].getFailure()).toBe('file.only comments are not allowed');
     });
@@ -44,7 +28,7 @@ describe('no-wallaby-file-only rule', () => {
             /*file.only*/
             var x = 1;
         `;
-        const result = helper({src, rule: 'no-wallaby-file-only'});
+        const result = helper({src, rule});
         expect(result.errorCount).toBe(1);
         expect(result.failures[0].getFailure()).toBe('file.only comments are not allowed');
     });
@@ -55,7 +39,7 @@ describe('no-wallaby-file-only rule', () => {
                 /*file.only*/            
             };
         `;
-        const result = helper({src, rule: 'no-wallaby-file-only'});
+        const result = helper({src, rule});
         expect(result.errorCount).toBe(1);
         expect(result.failures[0].getFailure()).toBe('file.only comments are not allowed');
     });
@@ -64,7 +48,7 @@ describe('no-wallaby-file-only rule', () => {
         const src = `
             var x = '// file.only';
         `;
-        const result = helper({src, rule: 'no-wallaby-file-only'});
+        const result = helper({src, rule});
         expect(result.errorCount).toBe(0);
     });
 });
