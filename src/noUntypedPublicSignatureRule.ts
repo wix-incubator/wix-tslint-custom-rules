@@ -1,9 +1,10 @@
 import * as Lint from 'tslint';
 import * as ts from 'typescript';
 
-export class Rule extends Lint.Rules.AbstractRule {
-    static FAILURE_STRING = '';
+const FAILURE_STRING_RETURN = 'Public methods must have return type.';
+const FAILURE_STRING_PARAMS = 'All arguments of public method must have types.';
 
+export class Rule extends Lint.Rules.AbstractRule {
     public apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
         return this.applyWithWalker(new Walk(sourceFile, this.getOptions()));
     }
@@ -22,11 +23,11 @@ class Walk extends Lint.RuleWalker {
     visitMethodDeclaration(node: ts.MethodDeclaration) {
         if (Walk.isPublicMethod(node)) {
             if (!node.parameters.every(parameter => Walk.isTyped(parameter) || Boolean(parameter.dotDotDotToken))) {
-                this.addFailureAtNode(node, 'All arguments of public method must have types.');
+                this.addFailureAtNode(node, FAILURE_STRING_PARAMS);
             }
 
             if (!Walk.isTyped(node)) {
-                this.addFailureAtNode(node, 'Public methods must have return type.');
+                this.addFailureAtNode(node, FAILURE_STRING_RETURN);
             }
         }
 

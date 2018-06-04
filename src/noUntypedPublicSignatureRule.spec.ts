@@ -42,6 +42,20 @@ describe('noUntypedPublicSignatureRule', () => {
         expect(result.failures[0].getFailure()).toBe('Public methods must have return type.')
     });
 
+    it('should raise two errors when method has untyped parameter and untyped return value', () => {
+        const src = `
+            class A {
+                public b(c) {
+                
+                }
+            }
+        `;
+        const result = helper({src, rule});
+        expect(result.errorCount).toBe(2);
+        expect(result.failures[0].getFailure()).toBe('All arguments of public method must have types.');
+        expect(result.failures[1].getFailure()).toBe('Public methods must have return type.');
+    });
+
     it('should not allow :any return value', () => {
         const src = `
             class A {
