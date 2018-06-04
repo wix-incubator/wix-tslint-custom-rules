@@ -2,6 +2,8 @@ import * as Lint from 'tslint';
 import * as ts from 'typescript';
 
 export class Rule extends Lint.Rules.AbstractRule {
+    static FAILURE_STRING = 'Async functions with no await are not allowed.';
+
     public apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
         return this.applyWithWalker(new Walk(sourceFile, this.getOptions()));
     }
@@ -45,9 +47,8 @@ class Walk extends Lint.RuleWalker {
     }
 
     addFailureIfAsyncFunctionHasNoAwait(node: ts.ArrowFunction | ts.FunctionDeclaration) {
-        if (Walk.isAsyncFunction(node) && !Walk.functionBlockHasAwait(node.getChildren().find(child => child.kind === ts.SyntaxKind.Block))) {
-            this.addFailureAt(node.getStart(), node.getWidth(), 'Async function without await is not allowed');
+        if (Walk.isAsyncFunction(node) && !Walk.functionBlockHasAwait(node.body)) {
+            this.addFailureAtNode(node, Rule.FAILURE_STRING);
         }
-
     }
 }

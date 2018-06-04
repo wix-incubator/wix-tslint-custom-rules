@@ -1,4 +1,5 @@
 import {helper} from './lintRunner';
+import {Rule} from './noAsyncWithoutAwaitRule';
 
 const rule = 'no-async-without-await';
 
@@ -14,7 +15,18 @@ describe('noAsyncWithoutAwait Rule', () => {
         `;
             const result = helper({src, rule});
             expect(result.errorCount).toBe(1);
-            expect(result.failures[0].getFailure()).toBe('Async function without await is not allowed');
+        });
+
+        it('should fail with correct message', () => {
+            const src = `
+            async function a(){
+               let b = 1;
+               console.log(b);
+               
+            }
+        `;
+            const result = helper({src, rule});
+            expect(result.failures[0].getFailure()).toBe(Rule.FAILURE_STRING);
         });
 
         it('should not fail when the async function has an await', () => {
@@ -79,6 +91,7 @@ describe('noAsyncWithoutAwait Rule', () => {
                
             }
         `;
+
             const result = helper({src, rule});
             expect(result.errorCount).toBe(1);
         });
@@ -94,7 +107,14 @@ describe('noAsyncWithoutAwait Rule', () => {
             `;
             const result = helper({src, rule});
             expect(result.errorCount).toBe(1);
-            expect(result.failures[0].getFailure()).toBe('Async function without await is not allowed');
+        });
+
+        it(`should fail when the async arrow function doesn't have curly braces`, () => {
+            const src = `
+            const a = async () => 1;
+            `;
+            const result = helper({src, rule});
+            expect(result.errorCount).toBe(1);
         });
     });
 
