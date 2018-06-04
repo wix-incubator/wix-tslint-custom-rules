@@ -93,4 +93,48 @@ describe('noAsyncWithoutAwait Rule', () => {
        const result = helper({src, rule});
        expect(result.errorCount).toBe(1);
    });
+
+   describe('Classes', () => {
+      it('should check class methods', () => {
+          const src = `
+            class A {
+                async b() {
+                    console.log(1);
+                }
+            
+            }
+        `;
+          const result = helper({src, rule});
+          expect(result.errorCount).toBe(1);
+      });
+
+      it('should check class methods', () => {
+          const src = `
+            class A {
+                async b() {
+                    await b();
+                }
+            
+            }
+        `;
+          const result = helper({src, rule});
+          expect(result.errorCount).toBe(0);
+      });
+
+      it('should check class methods', () => {
+          const src = `
+          async () => {
+            await a();
+            class A {
+                async b() {
+                    console.log(1);
+                }
+            
+            }
+          };
+        `;
+          const result = helper({src, rule});
+          expect(result.errorCount).toBe(1);
+      });
+   });
 });

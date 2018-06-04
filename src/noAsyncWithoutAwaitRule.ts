@@ -1,6 +1,5 @@
 import * as Lint from 'tslint';
 import * as ts from 'typescript';
-import {isArrowFunction, isFunctionDeclaration} from 'tsutils';
 
 export class Rule extends Lint.Rules.AbstractRule {
     public apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
@@ -17,6 +16,11 @@ class Walk extends Lint.RuleWalker {
     visitArrowFunction(node: ts.ArrowFunction) {
         this.addFailureIfAsyncFunctionHasNoAwait(node);
         super.visitArrowFunction(node);
+    }
+
+    visitMethodDeclaration(node: ts.MethodDeclaration) {
+        this.addFailureIfAsyncFunctionHasNoAwait(node);
+        super.visitMethodDeclaration(node);
     }
 
     static isAsyncFunction(node): boolean {
