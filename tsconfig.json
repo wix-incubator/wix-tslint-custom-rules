@@ -3,7 +3,7 @@
     "module": "commonjs",
     "target": "es5",
     "sourceMap": true,
-    "outDir": "dist/src",
+    "outDir": "dist",
     "skipLibCheck": true,
     "lib": [
       "es6"
