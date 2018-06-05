@@ -16,7 +16,7 @@ class Walk extends Lint.RuleWalker {
     allowAny: boolean;
 
     static isPublicMethod(node: ts.MethodDeclaration) {
-        return Boolean(node.modifiers.find(modifier => modifier.kind === ts.SyntaxKind.PublicKeyword));
+        return Boolean(node.modifiers && node.modifiers.find(modifier => modifier.kind === ts.SyntaxKind.PublicKeyword));
     }
 
     isTyped(node: ts.MethodDeclaration | ts.ParameterDeclaration) {

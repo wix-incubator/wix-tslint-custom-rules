@@ -4,6 +4,19 @@ const rule = 'no-untyped-public-signature';
 
 describe('noUntypedPublicSignatureRule', () => {
     describe('default options', () => {
+        it('should not allow :any in public signature', () => {
+            const src = `
+            class A {
+                public b(c:any):void {
+                
+                }
+            }
+        `;
+            const result = helper({src, rule});
+            expect(result.errorCount).toBe(1);
+            expect(result.failures[0].getFailure()).toBe('All arguments of public method must have types.')
+        });
+
         it('should not allow untyped public signature', () => {
             const src = `
             class A {
@@ -17,17 +30,17 @@ describe('noUntypedPublicSignatureRule', () => {
             expect(result.failures[0].getFailure()).toBe('All arguments of public method must have types.')
         });
 
-        it('should not allow :any in public signature', () => {
+        it('should not fail on methods without modifiers', () => {
             const src = `
-            class A {
-                public b(c:any):void {
-                
-                }
-            }
-        `;
+                class A {
+                  a(c) {
+                  }
+                  public d(e):void {
+                  
+                  }
+                }`;
             const result = helper({src, rule});
             expect(result.errorCount).toBe(1);
-            expect(result.failures[0].getFailure()).toBe('All arguments of public method must have types.')
         });
 
         it('should not allow untyped return value', () => {
