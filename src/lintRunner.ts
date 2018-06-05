@@ -4,7 +4,7 @@ export const helper = ({src, rule}) => {
     const linter = new Linter({fix: false});
     linter.lint('', src, Configuration.parseConfigFile({
         "rules": {
-            [rule]: true
+            [rule.name || rule]: [true, rule.options]
         },
         "rulesDirectory": "src"
     }));
