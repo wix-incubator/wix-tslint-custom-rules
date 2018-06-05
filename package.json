@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "test": "jest",
-    "prepare": "npm version patch"
+    "prepack": "npm version patch"
   },
   "author": "",
   "license": "ISC",
