@@ -1,0 +1,10 @@
+{
+  "rules":
+  {
+    "no-async-without-await": true,
+    "no-full-package-import": true,
+    "no-untyped-public-signature": true,
+    "no-wallaby-file-only": true
+  },
+  "rulesDirectory": "dist"
+}

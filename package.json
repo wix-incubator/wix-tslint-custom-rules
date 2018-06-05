@@ -2,7 +2,7 @@
   "name": "wix-tslint-custom-rules",
   "version": "1.0.7",
   "description": "",
-  "main": "index.js",
+  "main": "wix-tslint-custom-rules.json",
   "scripts": {
     "build": "tsc",
     "test": "jest",
