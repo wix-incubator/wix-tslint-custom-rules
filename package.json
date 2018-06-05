@@ -21,7 +21,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "tslint": "^5.10.0",
+    "tslint": "^5.10.0"
   },
   "jest": {
     "moduleFileExtensions": [
