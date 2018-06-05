@@ -8,7 +8,16 @@ describe('noFullPackgeImport Rule', () => {
         `;
         const result = helper({src, rule: getRule()});
         expect(result.errorCount).toBe(1);
-        expect(result.failures[0].getFailure()).toBe('importing the full package "a-package" is not allowed');
+        expect(result.failures[0].getFailure()).toBe(`importing the full package 'a-package' is not allowed`);
+    });
+
+    xit(`should fail when importing a full package that was in the arguments`, () => {
+        const src = `
+            import * as _ from "a-package";
+        `;
+        const result = helper({src, rule: getRule()});
+        expect(result.errorCount).toBe(1);
+        expect(result.failures[0].getFailure()).toBe(`importing the full package 'a-package' is not allowed`);
     });
 
     it(`should not fail when importing a specific file from package`, () => {
