@@ -4,5 +4,5 @@ function getLatestVersion() {
   return JSON.parse(execSync(`npm show wix-tslint-custom-rules --registry=https://registry.npmjs.org/ --json`)).version;
 };
 
-execSync(`npm --no-git-tag-version version ${getLatestVersion()}`);
+execSync(`npm --no-git-tag-version version ${getLatestVersion()} --allow-same-version`);
 execSync(`npm --no-git-tag-version version patch`);
