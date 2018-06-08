@@ -18,15 +18,19 @@ describe('noAsyncWithoutAwait Rule', () => {
         });
 
         it('should fail with correct message', () => {
-            const src = `
-            async function a(){
+            const src = `async function a(){
                let b = 1;
                console.log(b);
                
             }
         `;
-            const result = helper({src, rule});
-            expect(result.failures[0].getFailure()).toBe(Rule.FAILURE_STRING);
+            const startPosition = src.indexOf('async');
+            const endPosition = startPosition + 'async'.length;
+            const failure = helper({src, rule}).failures[0];
+
+            expect(failure.getStartPosition().getPosition()).toEqual(startPosition);
+            expect(failure.getEndPosition().getPosition()).toEqual(endPosition);
+            expect(failure.getFailure()).toBe(Rule.FAILURE_STRING);
         });
 
         it('should not fail when the async function has an await', () => {

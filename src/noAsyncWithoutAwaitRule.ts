@@ -10,31 +10,35 @@ export class Rule extends Lint.Rules.AbstractRule {
 }
 
 class Walk extends Lint.RuleWalker {
-    visitFunctionDeclaration(node: ts.FunctionDeclaration) {
+    protected visitFunctionDeclaration(node: ts.FunctionDeclaration) {
         this.addFailureIfAsyncFunctionHasNoAwait(node);
         super.visitFunctionDeclaration(node);
     }
 
-    visitArrowFunction(node: ts.ArrowFunction) {
+    protected visitArrowFunction(node: ts.ArrowFunction) {
         this.addFailureIfAsyncFunctionHasNoAwait(node);
         super.visitArrowFunction(node);
     }
 
-    visitMethodDeclaration(node: ts.MethodDeclaration) {
+    protected visitMethodDeclaration(node: ts.MethodDeclaration) {
         this.addFailureIfAsyncFunctionHasNoAwait(node);
         super.visitMethodDeclaration(node);
     }
 
-    static isAsyncFunction(node): boolean {
-        return Boolean(node.modifiers && node.modifiers.find(modifier => modifier.kind === ts.SyntaxKind.AsyncKeyword));
-    };
+    private isAsyncFunction(node: ts.Node): boolean {
+        return Boolean(this.getAsyncModifier(node));
+    }
 
-    static isAwait(node: ts.Node): boolean {
+    private getAsyncModifier(node: ts.Node) {
+        return node.modifiers && node.modifiers.find((modifier) => modifier.kind === ts.SyntaxKind.AsyncKeyword);
+    }
+
+    private isAwait(node: ts.Node): boolean {
         return node.kind === ts.SyntaxKind.AwaitKeyword;
     }
 
-    static functionBlockHasAwait(node: ts.Node) {
-        if (Walk.isAwait(node)) {
+    private functionBlockHasAwait(node: ts.Node) {
+        if (this.isAwait(node)) {
             return true;
         }
 
@@ -42,13 +46,17 @@ class Walk extends Lint.RuleWalker {
             return false;
         }
 
-        const awaitInChildren = node.getChildren().map(Walk.functionBlockHasAwait);
+        const awaitInChildren: boolean[] = node.getChildren().map(this.functionBlockHasAwait.bind(this));
         return awaitInChildren.some(Boolean);
     }
 
-    addFailureIfAsyncFunctionHasNoAwait(node: ts.ArrowFunction | ts.FunctionDeclaration | ts.MethodDeclaration) {
-        if (Walk.isAsyncFunction(node) && !Walk.functionBlockHasAwait(node.body)) {
-            this.addFailureAtNode(node, Rule.FAILURE_STRING);
+    private addFailureIfAsyncFunctionHasNoAwait(node: ts.ArrowFunction | ts.FunctionDeclaration | ts.MethodDeclaration) {
+        if (this.isAsyncFunction(node) && !this.functionBlockHasAwait(node.body as ts.Node)) {
+            const asyncModifier = this.getAsyncModifier(node);
+            if (asyncModifier) {
+                this.addFailureAt(asyncModifier.getStart(), asyncModifier.getEnd() - asyncModifier.getStart(), Rule.FAILURE_STRING);
+            }
         }
     }
 }
+
