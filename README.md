@@ -26,6 +26,8 @@ Now you can add any rule you want from the package like so:
 }
 ```
 
+## Rules
+
 Rule | Description
 --- | ---
 `no-async-without-await` | Does not allow an async function without using the `await` keyword. In addition to making the code cleaner, it will also result in smaller transpiled code
