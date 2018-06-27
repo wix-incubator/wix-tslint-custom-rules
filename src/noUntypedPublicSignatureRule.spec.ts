@@ -30,17 +30,44 @@ describe('noUntypedPublicSignatureRule', () => {
             expect(result.failures[0].getFailure()).toBe('All arguments of public method must have types.')
         });
 
-        it('should not fail on methods without modifiers', () => {
+        it('should fail on implicit public methods', () => {
             const src = `
                 class A {
                   a(c) {
                   }
-                  public d(e):void {
-                  
+                }`;
+            const result = helper({src, rule});
+            expect(result.errorCount).toBe(2);
+        });
+
+        it('should fail on async implicit public methods', () => {
+            const src = `
+                class A {
+                  async a(c) {
                   }
                 }`;
             const result = helper({src, rule});
-            expect(result.errorCount).toBe(1);
+            expect(result.errorCount).toBe(2);
+        });
+
+        it('should not fail on private untyped method', () => {
+            const src = `
+                class A {
+                  private a(c) {
+                  }
+                }`;
+            const result = helper({src, rule});
+            expect(result.errorCount).toBe(0);
+        });
+
+        it('should not fail on private async untyped method', () => {
+            const src = `
+                class A {
+                  async private a(c) {
+                  }
+                }`;
+            const result = helper({src, rule});
+            expect(result.errorCount).toBe(0);
         });
 
         it('should not allow untyped return value', () => {

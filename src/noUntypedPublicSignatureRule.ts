@@ -16,7 +16,17 @@ class Walk extends Lint.RuleWalker {
     allowAny: boolean;
 
     static isPublicMethod(node: ts.MethodDeclaration) {
-        return Boolean(node.modifiers && node.modifiers.find(modifier => modifier.kind === ts.SyntaxKind.PublicKeyword));
+        if (!node.modifiers) {
+            return true;
+        }
+
+        return Walk.hasNonPublicModifiers(node.modifiers)
+    }
+
+    static hasNonPublicModifiers(modifiers: ts.ModifiersArray) {
+        const kinds = modifiers.map(modifier => modifier.kind);
+        const nonPublicModifiers: Array<ts.SyntaxKind> = [ts.SyntaxKind.PrivateKeyword, ts.SyntaxKind.ProtectedKeyword];
+        return kinds.filter(kind => nonPublicModifiers.includes(kind)).length === 0;
     }
 
     isTyped(node: ts.MethodDeclaration | ts.ParameterDeclaration) {
