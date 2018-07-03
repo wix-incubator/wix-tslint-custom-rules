@@ -112,14 +112,6 @@ describe('noAsyncWithoutAwait Rule', () => {
             const result = helper({src, rule});
             expect(result.errorCount).toBe(1);
         });
-
-        it(`should fail when the async arrow function doesn't have curly braces`, () => {
-            const src = `
-            const a = async () => 1;
-            `;
-            const result = helper({src, rule});
-            expect(result.errorCount).toBe(1);
-        });
     });
 
     describe('Classes', () => {
@@ -164,5 +156,40 @@ describe('noAsyncWithoutAwait Rule', () => {
             const result = helper({src, rule});
             expect(result.errorCount).toBe(1);
         });
+    });
+
+    describe('return statements', () => {
+        it('should not fail when the async function has a return statement', () => {
+            const src = `
+            async function a() {
+               let b = 1;
+               return b;
+            }
+        `;
+            const result = helper({src, rule});
+            expect(result.errorCount).toBe(0);
+        });
+
+        it('should fail when the async function has a return statement', () => {
+            const src = `
+            async function a() {
+               let b = 1;
+               let a = () => {
+                return 1;
+               }
+            }
+        `;
+            const result = helper({src, rule});
+            expect(result.errorCount).toBe(1);
+        });
+
+        it('should not fail when the async function has a short return statement', () => {
+            const src = `
+            let a = async () => 1;
+        `;
+            const result = helper({src, rule});
+            expect(result.errorCount).toBe(0);
+        });
+
     });
 });
