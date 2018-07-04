@@ -30,7 +30,7 @@ Now you can add any rule you want from the package like so:
 
 Rule | Description
 --- | ---
-`no-async-without-await` | Does not allow an async function without using the `await` keyword. In addition to making the code cleaner, it will also result in smaller transpiled code
+`no-async-without-await` | Does not allow an async function without using the `await` keyword, unless the function explicitly returns a value. In addition to making the code cleaner, it will also result in smaller transpiled code
 `no-untyped-public-signature` | Does not allow any untyped paramers nor return type on a public method. By default, `any` is forbidden as well, but can be allowed using: `"no-untyped-public-signature": [true, "allow-any"]`
 `no-wallaby-file-only` | Makes sure no `//file.only` comment (Wallby.js annotation) is left by mistake.
 `no-full-package-import` | Does not allow to import an entire package, only the required functionality. For example, use `import * as compact from 'lodash/compact'` instead of `import * as _ from 'lodash'` and `_.compact`. This rule is generic, and gets options like so: `"no-full-package-import": [true, "lodash"]`.
