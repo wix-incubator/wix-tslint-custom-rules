@@ -161,4 +161,39 @@ describe('noUntypedPublicSignatureRule', () => {
         });
     });
 
+    describe('with allowed methods', () => {
+        it('should allow untyped public method', () => {
+            const src = `
+            class A {
+                public componentWillMount() {
+                }
+                
+                render() {
+                }
+            }
+            `;
+            const result = helper({
+                src,
+                rule: {name: rule, options: [{allowedMethods: ['componentWillMount', 'render']}]}
+            });
+            expect(result.errorCount).toBe(0);
+        });
+
+        it('should support multiple allowedMethods options', () => {
+            const src = `
+            class A {
+                public componentWillMount() {
+                }
+                
+                render() {
+                }
+            }
+            `;
+            const result = helper({
+                src,
+                rule: {name: rule, options: [{allowedMethods: ['componentWillMount']}, {allowedMethods: ['render']}]}
+            });
+            expect(result.errorCount).toBe(0);
+        });
+    });
 });
