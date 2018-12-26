@@ -1,6 +1,6 @@
 import * as Lint from 'tslint';
 import * as ts from 'typescript';
-import * as path from "path";
+import * as path from 'path';
 
 const failureStrings = {
     reactComp: 'react components file names should be PascalCase',

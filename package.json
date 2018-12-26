@@ -21,6 +21,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
+    "@types/node": "^10.12.18",
     "tslint": "^5.10.0"
   },
   "jest": {
