@@ -13,6 +13,15 @@ describe('ecomCustomFileNames Rule', () => {
 
         result = helper({src, rule, fileName: 'src/components/AA/aaa.ts'});
         expect(result.failures.length).toEqual(0);
+
+        result = helper({src, rule, fileName: 'src/components/ProductItem/ProductItem.tsx'});
+        expect(result.failures.length).toEqual(0);
+
+        result = helper({src, rule, fileName: '/src/components/RadioOption/RadioOption.spec.ts'});
+        expect(result.failures.length).toEqual(0);
+
+        result = helper({src, rule, fileName: '/src/components/RadioOption/radio-otion.spec.ts'});
+        expect(result.failures[0].getFailure()).toEqual('non component files inside the component folder should be either camelCase or PascalCase');
     });
 
     it('should enforce ".testKit" on testkits', () => {

@@ -1,12 +1,18 @@
 import * as Lint from 'tslint';
 import * as ts from 'typescript';
 import * as path from 'path';
+import {isUpperCase} from 'tslint/lib/utils';
 
 const failureStrings = {
     reactComp: 'react components file names should be PascalCase',
+    filesRelatedToReactComp: 'non component files inside the component folder should be either camelCase or PascalCase',
     testkit: 'testkits file names should end with ".testKit"',
     camelCase: 'file names should be camelCase',
 };
+
+function isPascalCased(name: string): boolean {
+    return isUpperCase(name[0]) && !name.includes("_") && !name.includes("-");
+}
 
 function isLowerCase(str: string): boolean {
     return str === str.toLowerCase();
@@ -23,13 +29,29 @@ export class Rule extends Lint.Rules.AbstractRule {
         const fileName = path.basename(sourceFile.fileName);
 
         if (extname === '.tsx' && dirname.includes('/components')) {
-            return [new Lint.RuleFailure(
-                sourceFile,
-                0,
-                0,
-                failureStrings.reactComp,
-                this.ruleName,
-            )];
+            if (!isPascalCased(fileName)) {
+                return [new Lint.RuleFailure(
+                    sourceFile,
+                    0,
+                    0,
+                    failureStrings.reactComp,
+                    this.ruleName,
+                )];
+            }
+            return;
+        }
+
+        if (extname === '.ts' && dirname.includes('/components')) {
+            if (!isPascalCased(fileName) && !isCamelCased(fileName)) {
+                return [new Lint.RuleFailure(
+                    sourceFile,
+                    0,
+                    0,
+                    failureStrings.filesRelatedToReactComp,
+                    this.ruleName,
+                )];
+            }
+            return;
         }
 
         if (/testkit\./i.exec(fileName) !== null) {
