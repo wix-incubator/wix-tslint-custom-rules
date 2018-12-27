@@ -8,6 +8,7 @@ const failureStrings = {
     filesRelatedToReactComp: 'non component files inside the component folder should be either camelCase or PascalCase',
     testkit: 'testkits file names should end with ".testKit"',
     camelCase: 'file names should be camelCase',
+    classFiles: 'class files should be PascalCase',
 };
 
 function isPascalCased(name: string): boolean {
@@ -63,6 +64,22 @@ export class Rule extends Lint.Rules.AbstractRule {
                     failureStrings.testkit,
                     this.ruleName,
                 )];
+            }
+        }
+        console.log(sourceFile.text);
+        const fileNameWithoutExt = fileName.replace(extname, '');
+        console.log(fileNameWithoutExt);
+        if (sourceFile.text.toLowerCase().includes(`export class ${fileNameWithoutExt.toLowerCase()} {`)) {
+            if (!isPascalCased(fileName)) {
+                return [new Lint.RuleFailure(
+                    sourceFile,
+                    0,
+                    0,
+                    failureStrings.classFiles,
+                    this.ruleName,
+                )];
+            } else {
+                return;
             }
         }
 

@@ -51,4 +51,12 @@ describe('wixStoresCustomFileNames Rule', () => {
         result = helper({src, rule, fileName: 'src/really_weird_name.ts'});
         expect(result.failures[0].getFailure()).toEqual('file names should be camelCase');
     });
+
+    it('if file exports a class with the name of the file it should be PascalCase', () => {
+        let result = helper({src: 'export class Test {};', rule, fileName: 'src/Test.ts'});
+        expect(result.failures.length).toEqual(0);
+
+        result = helper({src: 'export class Test {};', rule, fileName: 'src/test.ts'});
+        expect(result.failures.length).toEqual(1);
+    });
 });
