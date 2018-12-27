@@ -66,9 +66,8 @@ export class Rule extends Lint.Rules.AbstractRule {
                 )];
             }
         }
-        console.log(sourceFile.text);
+
         const fileNameWithoutExt = fileName.replace(extname, '');
-        console.log(fileNameWithoutExt);
         if (sourceFile.text.toLowerCase().includes(`export class ${fileNameWithoutExt.toLowerCase()} {`)) {
             if (!isPascalCased(fileName)) {
                 return [new Lint.RuleFailure(
