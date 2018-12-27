@@ -1,9 +1,9 @@
 import {helper} from './lintRunner';
 
-const rule = 'ecom-custom-file-names';
+const rule = 'wix-stores-custom-file-names';
 const src = '';
 
-describe('ecomCustomFileNames Rule', () => {
+describe('wixStoresCustomFileNames Rule', () => {
     it('should enforce PascalCase on react components', () => {
         let result = helper({src, rule, fileName: 'src/components/AA/aaa.tsx'});
         expect(result.failures[0].getFailure()).toEqual('react components file names should be PascalCase');
