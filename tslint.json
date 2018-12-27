@@ -1,0 +1,8 @@
+{
+    "extends": [
+        "tslint-config-yoshi"
+    ],
+    "rules": {
+        "no-unnecessary-else": false
+    }
+}

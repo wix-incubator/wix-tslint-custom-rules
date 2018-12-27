@@ -5,6 +5,9 @@
   "main": "wix-tslint-custom-rules.json",
   "scripts": {
     "build": "tsc",
+    "lint": "tslint -c tslint.json src/**/*.ts -p tsconfig.json",
+    "lint:fix": "tslint -c tslint.json src/**/*.ts -p tsconfig.json --fix",
+    "pretest": "npm run lint",
     "test": "jest",
     "release": "wnpm-release --no-shrinkwrap"
   },
@@ -22,7 +25,10 @@
   },
   "dependencies": {
     "@types/node": "^10.12.18",
-    "tslint": "^5.10.0"
+    "prettier": "^1.15.3",
+    "tslint": "^5.10.0",
+    "tslint-config-yoshi": "^3.22.5",
+    "tslint-plugin-wix-style-react": "^1.0.3"
   },
   "jest": {
     "moduleFileExtensions": [
