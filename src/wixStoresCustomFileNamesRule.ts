@@ -79,7 +79,7 @@ export class Rule extends Lint.Rules.AbstractRule {
     if (
       sourceFile.text
         .toLowerCase()
-        .includes(`export class ${fileNameWithoutExt.toLowerCase()} {`)
+        .includes(`class ${fileNameWithoutExt.toLowerCase().replace('.', '')}`)
     ) {
       if (!isPascalCased(fileName)) {
         return [
@@ -95,6 +95,10 @@ export class Rule extends Lint.Rules.AbstractRule {
         return;
       }
     }
+
+    if (fileName.includes('.spec') && (isPascalCased(fileName) || isCamelCased(fileName))) {
+          return;
+      }
 
     if (!isCamelCased(fileName)) {
       return [
