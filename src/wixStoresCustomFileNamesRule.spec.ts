@@ -94,25 +94,24 @@ describe('wixStoresCustomFileNames Rule', () => {
     expect(result.failures.length).toEqual(1);
 
     result = helper({
-          src: 'class TestDriver {};',
-          rule,
-          fileName: 'src/Test.driver.ts',
-      });
-      expect(result.failures.length).toEqual(0);
+      src: 'class TestDriver {};',
+      rule,
+      fileName: 'src/Test.driver.ts',
+    });
+    expect(result.failures.length).toEqual(0);
 
-      result = helper({
-          src: 'describe("lala", () => {})',
-          rule,
-          fileName: 'src/Test.spec.ts',
-      });
-      expect(result.failures.length).toEqual(0);
+    result = helper({
+      src: 'describe("lala", () => {})',
+      rule,
+      fileName: 'src/Test.spec.ts',
+    });
+    expect(result.failures.length).toEqual(0);
 
-      result = helper({
-          src: 'describe("lala", () => {})',
-          rule,
-          fileName: 'src/test.spec.ts',
-      });
-      expect(result.failures.length).toEqual(0);
-
+    result = helper({
+      src: 'describe("lala", () => {})',
+      rule,
+      fileName: 'src/test.spec.ts',
+    });
+    expect(result.failures.length).toEqual(0);
   });
 });

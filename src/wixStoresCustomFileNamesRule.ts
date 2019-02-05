@@ -96,9 +96,12 @@ export class Rule extends Lint.Rules.AbstractRule {
       }
     }
 
-    if (fileName.includes('.spec') && (isPascalCased(fileName) || isCamelCased(fileName))) {
-          return;
-      }
+    if (
+      fileName.includes('.spec') &&
+      (isPascalCased(fileName) || isCamelCased(fileName))
+    ) {
+      return;
+    }
 
     if (!isCamelCased(fileName)) {
       return [
