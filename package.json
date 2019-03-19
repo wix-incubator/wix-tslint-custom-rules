@@ -26,7 +26,7 @@
   "dependencies": {
     "@types/node": "^10.12.18",
     "prettier": "^1.15.3",
-    "tslint": "^5.10.0",
+    "tslint": "^5.12.0",
     "tslint-config-yoshi": "^3.22.5",
     "tslint-plugin-wix-style-react": "^1.0.3"
   },
