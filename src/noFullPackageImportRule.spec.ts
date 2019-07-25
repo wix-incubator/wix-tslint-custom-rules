@@ -1,4 +1,5 @@
 import { helper } from './lintRunner';
+
 const getRule = (options: string[] = ['a-package']) => ({
   name: 'no-full-package-import',
   options,
@@ -13,6 +14,28 @@ describe('noFullPackgeImport Rule', () => {
     expect(result.errorCount).toBe(1);
     expect(result.failures[0].getFailure()).toBe(
       `importing the full package 'a-package' is not allowed`,
+    );
+  });
+
+  it(`should fail when importing a full package that was in the arguments with suffix dist/src`, () => {
+    const src = `
+            import * as _ from 'a-package/dist/src';
+        `;
+    const result = helper({ src, rule: getRule() });
+    expect(result.errorCount).toBe(1);
+    expect(result.failures[0].getFailure()).toBe(
+      `importing the full package 'a-package/dist/src' is not allowed`,
+    );
+  });
+
+  it(`should fail when importing a full package that was in the arguments with suffix dist/es/src`, () => {
+    const src = `
+            import * as _ from 'a-package/dist/es/src';
+        `;
+    const result = helper({ src, rule: getRule() });
+    expect(result.errorCount).toBe(1);
+    expect(result.failures[0].getFailure()).toBe(
+      `importing the full package 'a-package/dist/es/src' is not allowed`,
     );
   });
 
