@@ -14,7 +14,12 @@ class Walk extends Lint.RuleWalker {
   visitImportDeclaration(node: ts.ImportDeclaration) {
     const isNotAllowedPackage = this.getOptions().some(packageName => {
       const text = node.moduleSpecifier.getText().replace(/'/g, '');
-      return text.indexOf(packageName) === 0 && text === packageName;
+      return (
+        text.indexOf(packageName) === 0 &&
+        (text === packageName ||
+          text === `${packageName}/dist/src` ||
+          text === `${packageName}/dist/es/src`)
+      );
     });
 
     if (isNotAllowedPackage) {
